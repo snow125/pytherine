@@ -92,9 +92,10 @@ class DEVRequestHandler(BaseHTTPRequestHandler):
     def check_path(self, path_info):
         if path_info == '/':
             return self.make_app_by_view_result(index())
+        elif path_info[1:] in func_views:
+            return self.make_app_by_path(path_info[1:])
         else:
-            path_info = path_info[1:]
-            return self.make_app_by_path(path_info)
+            return self.make_app_by_view_result(wrong_404())
 
     def make_app_by_path(self, path_info):
         result = func_views[path_info]()
@@ -113,6 +114,9 @@ def add_rule(f):
 
 def index():
     return '<h1>Welcome to the pytherine!</h1>'
+
+def wrong_404():
+    return '404 not found'
 
 @add_rule
 def hello():
